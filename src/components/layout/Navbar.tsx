@@ -72,7 +72,7 @@ export default function Navbar() {
       {/* Category nav */}
       <div className={`bg-red-600 text-white transition-shadow ${scrolled ? "shadow-lg" : ""}`}>
         <div className="max-w-7xl mx-auto px-4">
-          <nav className="hidden lg:flex items-center overflow-x-auto">
+          <nav className="hidden lg:flex items-center overflow-x-auto divide-x divide-red-500">
             <Link href="/" className="px-4 py-3 text-sm font-bold whitespace-nowrap hover:bg-red-700 transition-colors border-r border-red-500">
               Home
             </Link>
