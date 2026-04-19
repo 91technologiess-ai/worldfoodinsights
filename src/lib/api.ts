@@ -41,7 +41,7 @@ export async function getArticleBySlug(slug: string) {
     .select(`*, authors(name, slug, avatar_url, bio), categories(name, slug, color), article_seo(*)`)
     .eq("slug", slug)
     .eq("status", "published")
-    .single()
+    .maybeSingle()
   if (error) throw error
   return data
 }

@@ -5,10 +5,11 @@ import AdZone from "@/components/ui/AdZone"
 import Link from "next/link"
 import ShareButtons from "@/components/article/ShareButtons"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const article = await getArticleBySlug(params.slug).catch(() => null)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const article = await getArticleBySlug(slug).catch(() => null)
   if (!article) return { title: "Not Found" }
   return {
     title: article.title,
@@ -16,8 +17,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = await getArticleBySlug(params.slug).catch(() => null)
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const article = await getArticleBySlug(slug).catch(() => null)
   if (!article) notFound()
 
   return (

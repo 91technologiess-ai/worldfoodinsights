@@ -1,31 +1,32 @@
-import { getArticlesByCategory, getCategories } from "@/lib/api"
+﻿import { getArticlesByCategory, getCategories } from "@/lib/api"
 import ArticleCard from "@/components/article/ArticleCard"
 import AdZone from "@/components/ui/AdZone"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const categories = await getCategories().catch(() => [])
-  const category = categories?.find((c: any) => c.slug === params.slug)
+  const category = categories?.find((c: any) => c.slug === slug)
   if (!category) return { title: "Category Not Found" }
   return {
-    title: `${category.name} - World Food Insights`,
-    description: category.description || `Latest ${category.name} news and updates`,
+    title: category.name + " - World Food Insights",
+    description: category.description || "Latest " + category.name + " news",
   }
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const categories = await getCategories().catch(() => [])
-  const category = categories?.find((c: any) => c.slug === params.slug)
+  const category = categories?.find((c: any) => c.slug === slug)
   if (!category) notFound()
 
-  const articles = await getArticlesByCategory(params.slug, 20).catch(() => [])
+  const articles = await getArticlesByCategory(slug, 20).catch(() => [])
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Category Header */}
       <div
         className="rounded-xl p-8 mb-8 text-white"
         style={{ backgroundColor: category.color || "#E63946" }}
@@ -45,7 +46,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       <AdZone zone="header" className="mb-8" />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Articles Grid */}
         <div className="lg:col-span-3">
           {articles && articles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -62,7 +62,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           )}
         </div>
 
-        {/* Sidebar */}
         <aside className="lg:col-span-1 space-y-6">
           <AdZone zone="sidebar_top" />
           <div className="bg-white rounded-lg border border-gray-100 p-4">
@@ -73,12 +72,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
               {categories?.map((cat: any) => (
                 <li key={cat.id}>
                   <Link
-                    href={`/category/${cat.slug}`}
-                    className={`flex items-center gap-2 text-sm py-1.5 transition-colors ${
-                      cat.slug === params.slug
-                        ? "text-red-600 font-medium"
-                        : "text-gray-600 hover:text-red-600"
-                    }`}
+                    href={"/category/" + cat.slug}
+                    className={"flex items-center gap-2 text-sm py-1.5 transition-colors " + (cat.slug === slug ? "text-red-600 font-medium" : "text-gray-600 hover:text-red-600")}
                   >
                     <span
                       className="w-2 h-2 rounded-full flex-shrink-0"
