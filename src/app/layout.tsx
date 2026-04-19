@@ -4,11 +4,17 @@ import "./globals.css"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
+
 const merriweather = Merriweather({
-  weight: ["300", "400", "700", "900"],
+  weight: ["400", "700", "900"],
   subsets: ["latin"],
   variable: "--font-merriweather",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -16,33 +22,21 @@ export const metadata: Metadata = {
     default: "World Food Insights - Latest Food News & Insights",
     template: "%s | World Food Insights",
   },
-  description: "Your trusted source for the latest food news, recipes, industry updates, and culinary insights from India and around the world.",
-  keywords: ["food news", "indian food", "recipes", "food industry", "food startups", "food tech"],
+  description: "Your trusted source for the latest food news, recipes, industry updates from India and around the world.",
+  keywords: ["food news", "indian food", "recipes", "food industry", "food startups"],
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://worldfoodinsights.com",
     siteName: "World Food Insights",
   },
-  twitter: {
-    card: "summary_large_image",
-    site: "@worldfoodinsights",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-    },
-  },
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${merriweather.variable} font-sans bg-gray-50 text-gray-900 antialiased`}>
+    <html lang="en" className={`${inter.variable} ${merriweather.variable}`}>
+      <body className="bg-gray-100 text-gray-900 antialiased">
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

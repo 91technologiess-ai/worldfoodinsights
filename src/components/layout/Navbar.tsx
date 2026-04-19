@@ -19,74 +19,100 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}>
-      {/* Top bar */}
-      <div className="bg-red-600 text-white text-xs py-1 px-4 flex justify-between items-center">
-        <span>World Food Insights — Your Daily Food News</span>
-        <div className="flex gap-4">
-          <Link href="/advertise" className="hover:underline">Advertise</Link>
-          <Link href="/contact" className="hover:underline">Contact</Link>
+    <header className="sticky top-0 z-50 w-full">
+      {/* Top utility bar */}
+      <div className="bg-[#1d3557] text-white text-xs py-1.5 px-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <span className="hidden sm:block text-gray-300">India's #1 Food News Platform</span>
+          <div className="flex gap-4 ml-auto">
+            <Link href="/advertise" className="hover:text-red-400 transition-colors">Advertise</Link>
+            <Link href="/contact" className="hover:text-red-400 transition-colors">Contact</Link>
+            <Link href="/admin" className="hover:text-red-400 transition-colors">Admin</Link>
+          </div>
         </div>
       </div>
 
-      {/* Main navbar */}
-      <div className="bg-gray-900 text-white">
+      {/* Logo bar */}
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-red-500">WFI</span>
+          <Link href="/" className="flex items-center gap-3">
+            <div className="bg-red-600 text-white font-black text-xl px-3 py-1.5 rounded">
+              WFI
+            </div>
             <div className="hidden sm:block">
-              <div className="text-lg font-bold leading-tight">World Food Insights</div>
-              <div className="text-xs text-gray-400">Your Daily Food News</div>
+              <div className="text-lg font-black text-gray-900 leading-tight">World Food Insights</div>
+              <div className="text-xs text-gray-500 font-medium">India's Food News Authority</div>
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/search"
+              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full text-sm text-gray-600 transition-colors"
+            >
+              <Search size={16} />
+              <span className="hidden sm:block">Search</span>
+            </Link>
+            <button
+              className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-full"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Category nav */}
+      <div className={`bg-red-600 text-white transition-shadow ${scrolled ? "shadow-lg" : ""}`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <nav className="hidden lg:flex items-center overflow-x-auto">
+            <Link href="/" className="px-4 py-3 text-sm font-bold whitespace-nowrap hover:bg-red-700 transition-colors border-r border-red-500">
+              Home
+            </Link>
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/category/${cat.slug}`}
-                className="px-3 py-2 text-sm hover:bg-red-600 rounded transition-colors"
+                href={"/category/" + cat.slug}
+                className="px-4 py-3 text-sm font-medium whitespace-nowrap hover:bg-red-700 transition-colors"
               >
                 {cat.name}
               </Link>
             ))}
           </nav>
-
-          <div className="flex items-center gap-3">
-            <Link href="/search" className="p-2 hover:bg-gray-700 rounded-full transition-colors">
-              <Search size={18} />
-            </Link>
-            <button
-              className="lg:hidden p-2 hover:bg-gray-700 rounded-full"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
         </div>
+      </div>
 
-        {/* Mobile menu */}
-        {isOpen && (
-          <div className="lg:hidden bg-gray-800 border-t border-gray-700">
+      {/* Mobile menu */}
+      {isOpen && (
+        <div className="lg:hidden bg-white border-b border-gray-200 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 py-2">
+            <Link
+              href="/"
+              className="block py-3 text-sm font-bold text-gray-900 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Home
+            </Link>
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/category/${cat.slug}`}
-                className="block px-4 py-3 text-sm hover:bg-gray-700 border-b border-gray-700"
+                href={"/category/" + cat.slug}
+                className="block py-3 text-sm text-gray-700 border-b border-gray-100 hover:text-red-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {cat.name}
               </Link>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }
